@@ -1,41 +1,56 @@
-import React from 'react';
+import React from "react";
 import Table from "react-bootstrap/Table";
-const TableUsers = ({users}) => {
-console.log("users:", users)
+import Button from "react-bootstrap/Button";
+const TableUsers = ({ users, showUserInfo, showUserForm }) => {
+    if (!users.length) return <h1>Here is no data</h1>;
+
+    let columns = [ //get all the fields name to create the table head
+        ...new Set(
+            users
+                .map(user =>
+                    Object.entries(user)
+                        .map(el => el[0])
+                        .filter(el => el !== "id")
+                )
+                .flat(1)
+        )
+    ];
+
+    const header = columns.map(field => <th key={field}>{field}</th>);
+    const tableRows = users.map((user,i) => (
+        <tr key={user.id}>
+            <td>
+                <Button variant="link" onClick={() => showUserInfo(user)}>View</Button>
+            </td>
+            <td>
+                {" "}
+                <Button variant="link" onClick={showUserForm}>Edit</Button>
+            </td>
+            {columns.map(col =>
+                col === "empActive" ? (
+                    <td key={col} className="align-middle">{user[col] ? "Yes" : "No"}</td>
+                ) : (
+                    <td key={col} className="align-middle">{user[col]}</td>
+                )
+            )}
+            <td>
+                {" "}
+                <Button variant="link">Delete</Button>
+            </td>
+        </tr>
+    ));
     return (
-        <div>
-            <Table striped bordered hover size="sm">
+            <Table striped bordered size="sm" responsive="sm">
                 <thead>
-                <tr>
-                    <th></th>
-                    <th></th>
-                    <th>empID</th>
-                    <th>empName</th>
-                    <th>empActive</th>
-                    <th>empDepartment</th>
-                </tr>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        {header}
+                        <th></th>
+                    </tr>
                 </thead>
-                <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td colSpan="2">Larry the Bird</td>
-                    <td>@twitter</td>
-                </tr>
-                </tbody>
+                <tbody>{tableRows}</tbody>
             </Table>
-        </div>
     );
 };
 

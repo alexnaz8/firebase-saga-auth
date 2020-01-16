@@ -1,15 +1,40 @@
-import React from 'react';
+import React from "react";
 import Modal from "react-bootstrap/Modal";
-export const ModalComponent = ({user, showModal, toggleModal}) => {
-    console.log(showModal, toggleModal)
+import Button from "react-bootstrap/Button";
+export const ModalComponent = ({
+    showModal,
+    closeModal,
+    bodyContent
+}) => {
+    if (!showModal) return null;
+    const hasForm = React.isValidElement(bodyContent);
     return (
         <>
-            <Modal show={showModal} onHide={toggleModal}>
+            <Modal show={showModal} onHide={closeModal}>
                 <Modal.Header closeButton>
-                    <Modal.Title>User details</Modal.Title>
+                    <Modal.Title>
+                        {hasForm ? "Edit user" : "User info"}
+                    </Modal.Title>
                 </Modal.Header>
-                <Modal.Body>There will be user's info!</Modal.Body>
+                <Modal.Body>
+                    {hasForm ? (
+                        bodyContent
+                    ) : (
+                        <>
+                            <p>Employee ID: {bodyContent.empID}</p>
+                            <p>Employee name: {bodyContent.empName}</p>
+                            <p>
+                                Employee is active:{" "}
+                                {bodyContent.empActive ? "Yes" : "No"}
+                            </p>
+                            <p>
+                                Employee's department:{" "}
+                                {bodyContent.empDepartment}
+                            </p>
+                        </>
+                    )}
+                </Modal.Body>
             </Modal>
         </>
     );
-}
+};

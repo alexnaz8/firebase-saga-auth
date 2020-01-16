@@ -8,21 +8,22 @@ import Col from "react-bootstrap/Col";
 
 const SearchComponent = () => {
     return (
-        <Container> <Row>
-            <Col md={4}>
-            <label htmlFor="search-input">Employee Name</label>
-            <InputGroup className="mb-3">
-                <FormControl
-                    id="search-input"
-                    placeholder="Type name here"
-                    aria-label="Type name here"
-                />
-                <InputGroup.Append>
-                    <Button variant="outline-secondary">Search</Button>
-                </InputGroup.Append>
-            </InputGroup>
-            </Col>
-        </Row>
+        <Container>
+            <Row>
+                <Col md={4}>
+                    <label htmlFor="search-input">Employee Name</label>
+                    <InputGroup className="mb-3">
+                        <FormControl
+                            id="search-input"
+                            placeholder="Type name here"
+                            aria-label="Type name here"
+                        />
+                        <InputGroup.Append>
+                            <Button variant="outline-secondary">Search</Button>
+                        </InputGroup.Append>
+                    </InputGroup>
+                </Col>
+            </Row>
         </Container>
     );
 };
