@@ -1,11 +1,7 @@
 import React from "react";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
-export const ModalComponent = ({
-    showModal,
-    closeModal,
-    bodyContent
-}) => {
+export const ModalComponent = ({ showModal, closeModal, bodyContent }) => {
     if (!showModal) return null;
     const hasForm = React.isValidElement(bodyContent);
     return (

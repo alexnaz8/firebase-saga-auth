@@ -1,21 +1,18 @@
-import React, {useState} from "react";
+import React from "react";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 
-const EditForm = ({ onClose, onSubmit, user }) => {
-    const [name,setName] = useState(user.empName);
-    const [isActive,setActive] = useState(user.empActive);
-    const [department,setDepartment] = useState(user.empDepartment);
+const EditForm = ({ onClose, onSubmit }) => {
     return (
-        <Form onSubmit={(e)=>onSubmit(e,{...user,empName:name,empActive:isActive})}>
+        <Form onSubmit={onSubmit}>
             <Form.Group as={Row} controlId="formHorizontalEmail">
                 <Form.Label column sm={4}>
                     empName
                 </Form.Label>
                 <Col sm={8}>
-                    <Form.Control type="text" placeholder="Name" name="empName" value = {name} onChange={({target})=>setName(target.value)}/>
+                    <Form.Control type="text" placeholder="Name" />
                 </Col>
             </Form.Group>
             <Form.Group as={Row} controlId="formHorizontalCheck">
@@ -23,7 +20,7 @@ const EditForm = ({ onClose, onSubmit, user }) => {
                     isActive
                 </Form.Label>
                 <Col sm={8} className="d-flex align-items-center">
-                    <Form.Check checked={isActive} onChange={({target})=>{debugger;setActive(target.checked)}}/>
+                    <Form.Check />
                 </Col>
             </Form.Group>
             <Form.Group as={Row} sm={10} controlId="userForm.DepartmentSelect">
