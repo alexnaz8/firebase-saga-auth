@@ -8,9 +8,13 @@ const EditForm = ({ onClose, onSubmit, user }) => {
     const [name,setName] = useState(user.empName);
     const [isActive,setActive] = useState(user.empActive);
     const [department,setDepartment] = useState(user.empDepartment);
+    const getUpdatedUserData = e =>{
+        e.preventDefault();
+        onSubmit({...user,empName:name,empActive:isActive});
+    }
     return (
-        <Form onSubmit={(e)=>onSubmit(e,{...user,empName:name,empActive:isActive})}>
-            <Form.Group as={Row} controlId="formHorizontalEmail">
+        <Form onSubmit={getUpdatedUserData}>
+            <Form.Group as={Row} controlId="empName">
                 <Form.Label column sm={4}>
                     empName
                 </Form.Label>
@@ -18,15 +22,15 @@ const EditForm = ({ onClose, onSubmit, user }) => {
                     <Form.Control type="text" placeholder="Name" name="empName" value = {name} onChange={({target})=>setName(target.value)}/>
                 </Col>
             </Form.Group>
-            <Form.Group as={Row} controlId="formHorizontalCheck">
+            <Form.Group as={Row} controlId="epmActive">
                 <Form.Label column sm={4}>
                     isActive
                 </Form.Label>
                 <Col sm={8} className="d-flex align-items-center">
-                    <Form.Check checked={isActive} onChange={({target})=>{debugger;setActive(target.checked)}}/>
+                    <Form.Check checked={isActive} name="empActive" onChange={({target})=>setActive(target.checked)}/>
                 </Col>
             </Form.Group>
-            <Form.Group as={Row} sm={10} controlId="userForm.DepartmentSelect">
+            <Form.Group as={Row} sm={10} controlId="departmentSelect">
                 <Form.Label column sm={4}>
                     empDepartment
                 </Form.Label>

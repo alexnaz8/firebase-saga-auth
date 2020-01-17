@@ -7,10 +7,12 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import firebase from "../firebase";
 import EditForm from "../components/EditForm";
+import Button from "react-bootstrap/Button";
+import CreateUserForm from "../components/CreateUserForm";
 
 const Home = () => {
     const [modalIsShown, setModalShow] = useState(false);
-    const [modalContent, setModalContent] = useState(null);
+    const [modal, setModalContent] = useState({});
     const [users, setUsers] = useState([]);
 
     const showModal = () => {
@@ -19,7 +21,7 @@ const Home = () => {
 
     const closeModal = () => {
         setModalShow(false);
-        setModalContent(null);
+        setModalContent({});
     };
 
     const createUser = newUser => {
@@ -27,7 +29,6 @@ const Home = () => {
             .firestore()
             .collection("users")
             .add(newUser);
-        closeModal();
     };
 
     const updateUser = newUserData => {
@@ -48,37 +49,54 @@ const Home = () => {
     };
 
     const showUserInfo = user => {
-        setModalContent(user);
+        setModalContent({ modalTitle: "", modalContent: user });
         showModal();
     };
 
-    const showUserForm = user => {
-        setModalContent(
-            <EditForm
-                onClose={closeModal}
-                onSubmit={(e, data) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    updateUser(data);
-                }}
-                user={user}
-            />
-        );
+    const showEditUserForm = user => {
+        setModalContent({
+            title: "Edit User",
+            modalContent: (
+                <EditForm
+                    onClose={closeModal}
+                    onSubmit={updateUser}
+                    user={user}
+                />
+            )
+        });
         showModal();
     };
 
-    const onUserSearch = (name)=>{
+    const showAddUserForm = () => {
+        setModalContent({
+            title: "Create User",
+            modalContent: (
+                <CreateUserForm
+                    onClose={closeModal}
+                    onSubmit={createUser}
+                />
+            )
+        });
+        showModal();
+    };
+
+    const onUserSearch = name => {
         const fetchData = async () => {
-            try{
-            const db = firebase.firestore();
-            const data = await db.collection("users").get();
-            setUsers(data.docs.map(doc => ({ ...doc.data(), id: doc.id })));
-            }catch (e) {
-                console.log('User searching goes bad:',e)
+            try {
+                const db = firebase.firestore();
+                const data = !!name
+                    ? await db
+                          .collection("users")
+                          .where("empName", "==", name)
+                          .get()
+                    : await db.collection("users").get();
+                setUsers(data.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+            } catch (e) {
+                console.log("User searching goes bad:", e);
             }
         };
         fetchData();
-    }
+    };
 
     useEffect(() => {
         const db = firebase.firestore();
@@ -94,18 +112,27 @@ const Home = () => {
     return (
         <Container>
             <Row>
-                <SearchComponent />
+                <SearchComponent onUserSearch={onUserSearch} />
+                <Container className="pb-2">
+                    <Button
+                        type="button"
+                        variant="light"
+                        onClick={showAddUserForm}
+                    >
+                        Add Employee
+                    </Button>
+                </Container>
                 <Col>
                     <TableUsers
                         users={users}
                         showUserInfo={showUserInfo}
-                        showUserForm={showUserForm}
+                        showEditUserForm={showEditUserForm}
                         deleteUser={deleteUser}
                     />
                 </Col>
                 <ModalComponent
-                    title={""}
-                    bodyContent={modalContent}
+                    title={modal.title}
+                    bodyContent={modal.modalContent}
                     showModal={modalIsShown}
                     closeModal={closeModal}
                 />

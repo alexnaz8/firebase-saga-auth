@@ -1,7 +1,7 @@
 import React from "react";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
-const TableUsers = ({ users, showUserInfo, showUserForm, deleteUser }) => {
+const TableUsers = ({ users, showUserInfo, showEditUserForm, deleteUser }) => {
     if (!users.length) return <h1>Here is no data</h1>;
 
     let columns = [
@@ -27,7 +27,7 @@ const TableUsers = ({ users, showUserInfo, showUserForm, deleteUser }) => {
             </td>
             <td>
                 {" "}
-                <Button variant="link" onClick={()=>showUserForm(user)}>
+                <Button variant="link" onClick={()=>showEditUserForm(user)}>
                     Edit
                 </Button>
             </td>

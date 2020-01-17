@@ -1,7 +1,4 @@
-import React, { useState } from "react";
-import Container from "react-bootstrap/Container";
-import { ModalComponent } from "./components/ModalComponent";
-import TableUsers from "./components/TableUsers";
+import React from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import Home from "./containers/Home";
 import Login from "./components/Login";

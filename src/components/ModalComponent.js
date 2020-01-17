@@ -1,7 +1,6 @@
 import React from "react";
 import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
-export const ModalComponent = ({ showModal, closeModal, bodyContent }) => {
+export const ModalComponent = ({title="User info", showModal, closeModal, bodyContent }) => {
     if (!showModal) return null;
     const hasForm = React.isValidElement(bodyContent);
     return (
@@ -9,7 +8,7 @@ export const ModalComponent = ({ showModal, closeModal, bodyContent }) => {
             <Modal show={showModal} onHide={closeModal}>
                 <Modal.Header closeButton>
                     <Modal.Title>
-                        {hasForm ? "Edit user" : "User info"}
+                        {title}
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>

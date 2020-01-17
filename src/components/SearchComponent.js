@@ -5,23 +5,39 @@ import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Form from "react-bootstrap/Form";
 
-const SearchComponent = () => {
+const SearchComponent = ({ onUserSearch }) => {
+    const getName = e => {
+        e.preventDefault();
+        let name = e.target.elements.name.value;
+        name = name.charAt(0).toUpperCase() + name.slice(1);
+        onUserSearch(name);
+    };
     return (
         <Container>
             <Row>
                 <Col md={4}>
-                    <label htmlFor="search-input">Employee Name</label>
-                    <InputGroup className="mb-3">
-                        <FormControl
-                            id="search-input"
-                            placeholder="Type name here"
-                            aria-label="Type name here"
-                        />
-                        <InputGroup.Append>
-                            <Button variant="outline-secondary">Search</Button>
-                        </InputGroup.Append>
-                    </InputGroup>
+                    <Form onSubmit={getName}>
+                        <Form.Group controlId="search-input">
+                            <Form.Label>Employee Name</Form.Label>
+                            <InputGroup className="mb-3">
+                                <FormControl
+                                    placeholder="Type name here"
+                                    aria-label="Type name here"
+                                    name="name"
+                                />
+                                <InputGroup.Append>
+                                    <Button
+                                        type="submit"
+                                        variant="outline-secondary"
+                                    >
+                                        Search
+                                    </Button>
+                                </InputGroup.Append>
+                            </InputGroup>
+                        </Form.Group>
+                    </Form>
                 </Col>
             </Row>
         </Container>
