@@ -1,11 +1,13 @@
 import React from "react";
 import Modal from "react-bootstrap/Modal";
-export const ModalComponent = ({
-    title = "User info",
+import {connect} from "react-redux";
+const ModalComponent = ({
+    title,
     showModal,
     closeModal,
     bodyContent
 }) => {
+    debugger
     if (!showModal) return null;
     const hasForm = React.isValidElement(bodyContent);
     return (
@@ -36,3 +38,10 @@ export const ModalComponent = ({
         </>
     );
 };
+
+const mapStateToProps= ({modal})=>{
+    debugger
+    return {title:modal.title,bodyContent:modal.content}
+}
+
+export default  connect(mapStateToProps)(ModalComponent)

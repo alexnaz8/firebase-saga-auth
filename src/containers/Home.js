@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import TableUsers from "../components/TableUsers";
-import { ModalComponent } from "../components/ModalComponent";
+import ModalComponent from "../components/ModalComponent";
 import Container from "react-bootstrap/Container";
 import SearchComponent from "../components/SearchComponent";
 import Row from "react-bootstrap/Row";
@@ -11,21 +11,22 @@ import Button from "react-bootstrap/Button";
 import CreateUserForm from "../components/CreateUserForm";
 import { connect } from "react-redux";
 import PaginationWrapper from "../components/PaginationWrapper";
+import {clearModalContent, setModalContent} from "../redux/modalActions";
 
-const Home = ({ currentUser }) => {
+const Home = ({ currentUser, setModalContent, clearModalContent }) => {
     const [modalIsShown, setModalShow] = useState(false);
-    const [modal, setModalContent] = useState({});
     const [users, setUsers] = useState([]);
     const [itemsPerPage, setPerPageValue] = useState(4);
     const [activePage, setActivePage] = useState(1);
     const [departments, setDepartments] = useState([]);
+    const [usersForCurrentPage, setUsersForCurrentPage] = useState([]);
     const showModal = () => {
         setModalShow(true);
     };
 
     const closeModal = () => {
         setModalShow(false);
-        setModalContent({});
+        clearModalContent();
     };
 
     const createUser = newUser => {
@@ -53,14 +54,14 @@ const Home = ({ currentUser }) => {
     };
 
     const showUserInfo = user => {
-        setModalContent({ modalTitle: "", modalContent: user });
+        setModalContent({ title: "User info", content: user });
         showModal();
     };
 
     const showEditUserForm = user => {
         setModalContent({
             title: "Edit User",
-            modalContent: (
+            content: (
                 <EditForm
                     onClose={closeModal}
                     onSubmit={updateUser}
@@ -75,8 +76,12 @@ const Home = ({ currentUser }) => {
     const showAddUserForm = () => {
         setModalContent({
             title: "Create User",
-            modalContent: (
-                <CreateUserForm onClose={closeModal} onSubmit={createUser} departments = {departments}/>
+            content: (
+                <CreateUserForm
+                    onClose={closeModal}
+                    onSubmit={createUser}
+                    departments={departments}
+                />
             )
         });
         showModal();
@@ -119,10 +124,18 @@ const Home = ({ currentUser }) => {
         });
     }, []);
 
-    const usersForCurrentPage = users.slice(
-        itemsPerPage * activePage - itemsPerPage,
-        itemsPerPage * activePage
-    );
+    useEffect(() => {
+        const pagedUsersArray = users.slice(
+            itemsPerPage * activePage - itemsPerPage,
+            itemsPerPage * activePage
+        );
+
+        if (!pagedUsersArray.length&&activePage>1) {
+            setActivePage(activePage - 1);
+        } else {
+            setUsersForCurrentPage(pagedUsersArray);
+        }
+    }, [users, activePage]);
 
     return currentUser ? (
         <Container className={"my-3"}>
@@ -165,8 +178,6 @@ const Home = ({ currentUser }) => {
                     </Col>
                 </PaginationWrapper>
                 <ModalComponent
-                    title={modal.title}
-                    bodyContent={modal.modalContent}
                     showModal={modalIsShown}
                     closeModal={closeModal}
                 />
@@ -176,5 +187,6 @@ const Home = ({ currentUser }) => {
 };
 
 const mapStateToProps = ({ auth }) => ({ currentUser: auth.currentUser });
+const mapDispatchToProps = {setModalContent, clearModalContent}
 
-export default connect(mapStateToProps)(Home);
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
