@@ -7,6 +7,8 @@ export const searchHelper = (items, term) => {
         if (typeof item !== "string") {
             item = item.toString();
         }
-        return item.toLocaleLowerCase().includes(term.value.toLocaleLowerCase());
+        return item
+            .toLocaleLowerCase()
+            .includes(term.value.toLocaleLowerCase());
     });
 };

@@ -27,7 +27,7 @@ const TableUsers = ({ users, showUserInfo, showEditUserForm, deleteUser }) => {
             </td>
             <td>
                 {" "}
-                <Button variant="link" onClick={()=>showEditUserForm(user)}>
+                <Button variant="link" onClick={() => showEditUserForm(user)}>
                     Edit
                 </Button>
             </td>
@@ -44,7 +44,9 @@ const TableUsers = ({ users, showUserInfo, showEditUserForm, deleteUser }) => {
             )}
             <td>
                 {" "}
-                <Button variant="link" onClick = {()=>deleteUser(user)}>Delete</Button>
+                <Button variant="link" onClick={() => deleteUser(user)}>
+                    Delete
+                </Button>
             </td>
         </tr>
     ));

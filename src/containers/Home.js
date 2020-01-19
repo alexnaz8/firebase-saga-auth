@@ -9,12 +9,16 @@ import firebase from "../firebase";
 import EditForm from "../components/EditForm";
 import Button from "react-bootstrap/Button";
 import CreateUserForm from "../components/CreateUserForm";
+import { connect } from "react-redux";
+import PaginationWrapper from "../components/PaginationWrapper";
 
-const Home = () => {
+const Home = ({ currentUser }) => {
     const [modalIsShown, setModalShow] = useState(false);
     const [modal, setModalContent] = useState({});
     const [users, setUsers] = useState([]);
-
+    const [itemsPerPage, setPerPageValue] = useState(4);
+    const [activePage, setActivePage] = useState(1);
+    const [departments, setDepartments] = useState([]);
     const showModal = () => {
         setModalShow(true);
     };
@@ -61,6 +65,7 @@ const Home = () => {
                     onClose={closeModal}
                     onSubmit={updateUser}
                     user={user}
+                    departments={departments}
                 />
             )
         });
@@ -71,10 +76,7 @@ const Home = () => {
         setModalContent({
             title: "Create User",
             modalContent: (
-                <CreateUserForm
-                    onClose={closeModal}
-                    onSubmit={createUser}
-                />
+                <CreateUserForm onClose={closeModal} onSubmit={createUser} departments = {departments}/>
             )
         });
         showModal();
@@ -98,20 +100,45 @@ const Home = () => {
         fetchData();
     };
 
+    const logOut = () => {
+        firebase.auth().signOut();
+    };
+
     useEffect(() => {
         const db = firebase.firestore();
-        return db
-            .collection("users")
-            .onSnapshot(snapshot =>
-                setUsers(
-                    snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }))
-                )
-            );
+        return db.collection("users").onSnapshot(snapshot => {
+            const usersData = snapshot.docs.map(doc => ({
+                ...doc.data(),
+                id: doc.id
+            }));
+            setUsers(usersData);
+            const departments = [
+                ...new Set(usersData.map(user => user.empDepartment))
+            ];
+            setDepartments(departments);
+        });
     }, []);
 
-    return (
-        <Container>
+    const usersForCurrentPage = users.slice(
+        itemsPerPage * activePage - itemsPerPage,
+        itemsPerPage * activePage
+    );
+
+    return currentUser ? (
+        <Container className={"my-3"}>
             <Row>
+                <Container className="d-flex justify-content-center">
+                    <h5>You are logged in as {currentUser.email}</h5>
+                    <Button
+                        className="mx-2"
+                        variant="outline-secondary"
+                        size="sm"
+                        onClick={logOut}
+                    >
+                        LogOut
+                    </Button>
+                </Container>
+
                 <SearchComponent onUserSearch={onUserSearch} />
                 <Container className="pb-2">
                     <Button
@@ -122,14 +149,21 @@ const Home = () => {
                         Add Employee
                     </Button>
                 </Container>
-                <Col>
-                    <TableUsers
-                        users={users}
-                        showUserInfo={showUserInfo}
-                        showEditUserForm={showEditUserForm}
-                        deleteUser={deleteUser}
-                    />
-                </Col>
+                <PaginationWrapper
+                    totalAmount={users.length}
+                    itemsCountPerPage={itemsPerPage}
+                    activePage={activePage}
+                    setActivePage={setActivePage}
+                >
+                    <Col>
+                        <TableUsers
+                            users={usersForCurrentPage}
+                            showUserInfo={showUserInfo}
+                            showEditUserForm={showEditUserForm}
+                            deleteUser={deleteUser}
+                        />
+                    </Col>
+                </PaginationWrapper>
                 <ModalComponent
                     title={modal.title}
                     bodyContent={modal.modalContent}
@@ -138,7 +172,9 @@ const Home = () => {
                 />
             </Row>
         </Container>
-    );
+    ) : null;
 };
 
-export default Home;
+const mapStateToProps = ({ auth }) => ({ currentUser: auth.currentUser });
+
+export default connect(mapStateToProps)(Home);

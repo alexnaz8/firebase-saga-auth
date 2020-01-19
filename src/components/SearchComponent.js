@@ -6,12 +6,13 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
+import {makeCapitalized} from "../helpers/formHelper";
 
 const SearchComponent = ({ onUserSearch }) => {
     const getName = e => {
         e.preventDefault();
         let name = e.target.elements.name.value;
-        name = name.charAt(0).toUpperCase() + name.slice(1);
+        name = makeCapitalized(name);
         onUserSearch(name);
     };
     return (

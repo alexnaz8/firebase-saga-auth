@@ -9,7 +9,7 @@ class ErrorBoundary extends Component {
 
     render() {
         if (this.state.hasError) {
-            return <h1>Well, something is not OK.</h1>;
+            return <h1 className="text-center">Well, something is not OK.</h1>;
         }
 
         return this.props.children;

@@ -1,11 +1,12 @@
-import React, { useCallback, useContext } from "react";
+import React, { useCallback } from "react";
 import { withRouter, Redirect } from "react-router";
 import firebase from "../firebase";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import { connect } from "react-redux";
 
-const Login = ({ history }) => {
+const Login = ({ currentUser, history }) => {
     const handleLogin = useCallback(
         async event => {
             event.preventDefault();
@@ -22,11 +23,9 @@ const Login = ({ history }) => {
         [history]
     );
 
-    //const { currentUser } = useContext(AuthContext);
-
-    /*if (currentUser) {
+    if (currentUser) {
         return <Redirect to="/" />;
-    }*/
+    }
 
     return (
         <Container>
@@ -49,9 +48,13 @@ const Login = ({ history }) => {
                     />
                 </Form.Group>
                 <Button type="submit">Log in</Button>
+                <span className="mx-2">or</span>
+                <Button onClick={() => history.push("/signup")}>Sing Up</Button>
             </Form>
         </Container>
     );
 };
 
-export default withRouter(Login);
+const mapStateToProps = ({ auth }) => ({ currentUser: auth.currentUser });
+
+export default connect(mapStateToProps)(withRouter(Login));

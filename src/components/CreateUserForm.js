@@ -1,16 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
+import {makeCapitalized} from "../helpers/formHelper";
 
 const CreateUserForm = ({ onClose, onSubmit }) => {
-    const createUserObj = (e)=>{
+    const [empID, setID] = useState(0);
+    const [name, setName] = useState("");
+    const [isActive, setActive] = useState(false);
+    const [department, setDepartment] = useState("");
+    const createUserObj = e => {
         e.preventDefault();
-        const{empID,empName,empActive,empDepartment}=e.target.elements;
-        debugger
-        onSubmit({empID:empID.value,empName:empName.value,empActive:!!empActive.checked,empDepartment:empDepartment.value});
-    }
+        onSubmit({
+            empID: empID,
+            empName: name,
+            empActive: isActive,
+            empDepartment: department
+        });
+        setID(+empID + 1);
+        setActive(false);
+        setName("");
+        setDepartment("");
+    };
     return (
         <Form onSubmit={createUserObj}>
             <Form.Group as={Row} controlId="empID">
@@ -22,6 +34,8 @@ const CreateUserForm = ({ onClose, onSubmit }) => {
                         type="number"
                         name="empID"
                         placeholder="ID"
+                        value={empID}
+                        onChange={({ target }) => setID(target.value)}
                     />
                 </Col>
             </Form.Group>
@@ -34,6 +48,8 @@ const CreateUserForm = ({ onClose, onSubmit }) => {
                         type="text"
                         name="empName"
                         placeholder="Name"
+                        value={name}
+                        onChange={({ target }) => setName(makeCapitalized(target.value))}
                     />
                 </Col>
             </Form.Group>
@@ -42,7 +58,11 @@ const CreateUserForm = ({ onClose, onSubmit }) => {
                     isActive
                 </Form.Label>
                 <Col sm={8} className="d-flex align-items-center">
-                    <Form.Check name="empActive" />
+                    <Form.Check
+                        name="empActive"
+                        checked={isActive}
+                        onChange={({ target }) => setActive(target.checked)}
+                    />
                 </Col>
             </Form.Group>
             <Form.Group as={Row} controlId="empDepartment">
@@ -54,12 +74,14 @@ const CreateUserForm = ({ onClose, onSubmit }) => {
                         type="text"
                         name="empDepartment"
                         placeholder="Department"
+                        value={department}
+                        onChange={({ target }) => setDepartment(target.value)}
                     />
                 </Col>
             </Form.Group>
             <Form.Group as={Row}>
                 <Col className="d-flex justify-content-around" sm={4}>
-                    <Button type="submit" variant="secondary">
+                    <Button className="mx-2" type="submit" variant="secondary">
                         Create
                     </Button>
                     <Button variant="primary" onClick={onClose}>
