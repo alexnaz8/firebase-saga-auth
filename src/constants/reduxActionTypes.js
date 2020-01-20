@@ -4,11 +4,17 @@ export const authTypes = {
 };
 
 export const usersTypes = {
-    GET_USERS_DATA:"GET_USERS_DATA",
-    DELETE_USER:"DELETE_USER",
-    UPDATE_USER:"UPDATE_USER",
+    CREATE_USER: "CREATE_USER",
+    DELETE_USER: "DELETE_USER",
+    UPDATE_USER: "UPDATE_USER",
+    GET_USERS_DATA: "GET_USERS_DATA",
     SET_USERS: "SET_USERS",
-    SET_USER_DEPARTMENTS: "SET_USER_DEPARTMENTS"
+    SEARCH_USERS: "SEARCH_USERS"
+};
+
+export const departmentTypes = {
+    GET_DEPARTMENTS: "GET_DEPARTMENTS",
+    SET_DEPARTMENTS: "SET_DEPARTMENTS"
 };
 
 export const modalTypes = {

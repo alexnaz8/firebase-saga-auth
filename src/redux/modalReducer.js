@@ -1,4 +1,4 @@
-import {modalTypes} from "../constants/reduxActionTypes";
+import { modalTypes } from "../constants/reduxActionTypes";
 
 const initialState = {
     modal: {}

@@ -3,7 +3,7 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import {makeCapitalized} from "../helpers/formHelper";
+import { makeCapitalized } from "../helpers/formHelper";
 
 const CreateUserForm = ({ onClose, onSubmit }) => {
     const [empID, setID] = useState(0);
@@ -49,7 +49,9 @@ const CreateUserForm = ({ onClose, onSubmit }) => {
                         name="empName"
                         placeholder="Name"
                         value={name}
-                        onChange={({ target }) => setName(makeCapitalized(target.value))}
+                        onChange={({ target }) =>
+                            setName(makeCapitalized(target.value))
+                        }
                     />
                 </Col>
             </Form.Group>

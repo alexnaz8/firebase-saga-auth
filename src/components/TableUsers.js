@@ -1,24 +1,14 @@
 import React from "react";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
+import { getUnique, tableFieldsArrangment } from "../helpers/dataMapHelper";
 const TableUsers = ({ users, showUserInfo, showEditUserForm, deleteUser }) => {
     if (!users.length) return <h1>Here is no data</h1>;
 
-    let columns = [
-        //get all the fields name to create the table head
-        ...new Set(
-            users
-                .map(user =>
-                    Object.entries(user)
-                        .map(el => el[0])
-                        .filter(el => el !== "id")
-                )
-                .flat(1)
-        )
-    ];
+    let columns = tableFieldsArrangment(getUnique(users));
 
     const header = columns.map(field => <th key={field}>{field}</th>);
-    const tableRows = users.map((user, i) => (
+    const tableRows = users.map(user => (
         <tr key={user.id}>
             <td>
                 <Button variant="link" onClick={() => showUserInfo(user)}>

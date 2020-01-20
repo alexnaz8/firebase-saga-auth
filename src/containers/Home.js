@@ -11,14 +11,30 @@ import Button from "react-bootstrap/Button";
 import CreateUserForm from "../components/CreateUserForm";
 import { connect } from "react-redux";
 import PaginationWrapper from "../components/PaginationWrapper";
-import {clearModalContent, setModalContent} from "../redux/modalActions";
+import { clearModalContent, setModalContent } from "../redux/modalActions";
+import {
+    createUser,
+    updateUser,
+    deleteUser,
+    getUsersData,
+    findUsers
+} from "../redux/userActions";
 
-const Home = ({ currentUser, setModalContent, clearModalContent }) => {
+const Home = ({
+    currentUser,
+    setModalContent,
+    clearModalContent,
+    users,
+    getUsersData,
+    createUser,
+    updateUserData,
+    deleteUser,
+    departments,
+    findUsers
+}) => {
     const [modalIsShown, setModalShow] = useState(false);
-    const [users, setUsers] = useState([]);
     const [itemsPerPage, setPerPageValue] = useState(4);
     const [activePage, setActivePage] = useState(1);
-    const [departments, setDepartments] = useState([]);
     const [usersForCurrentPage, setUsersForCurrentPage] = useState([]);
     const showModal = () => {
         setModalShow(true);
@@ -29,28 +45,9 @@ const Home = ({ currentUser, setModalContent, clearModalContent }) => {
         clearModalContent();
     };
 
-    const createUser = newUser => {
-        firebase
-            .firestore()
-            .collection("users")
-            .add(newUser);
-    };
-
     const updateUser = newUserData => {
-        firebase
-            .firestore()
-            .collection("users")
-            .doc(newUserData.id)
-            .set(newUserData);
+        updateUserData(newUserData);
         closeModal();
-    };
-
-    const deleteUser = user => {
-        firebase
-            .firestore()
-            .collection("users")
-            .doc(user.id)
-            .delete();
     };
 
     const showUserInfo = user => {
@@ -88,28 +85,18 @@ const Home = ({ currentUser, setModalContent, clearModalContent }) => {
     };
 
     const onUserSearch = name => {
-        const fetchData = async () => {
-            try {
-                const db = firebase.firestore();
-                const data = !!name
-                    ? await db
-                          .collection("users")
-                          .where("empName", "==", name)
-                          .get()
-                    : await db.collection("users").get();
-                setUsers(data.docs.map(doc => ({ ...doc.data(), id: doc.id })));
-            } catch (e) {
-                console.log("User searching goes bad:", e);
-            }
-        };
-        fetchData();
+        findUsers(name);
     };
 
     const logOut = () => {
         firebase.auth().signOut();
     };
-
     useEffect(() => {
+        getUsersData();
+    }, []);
+
+    //firebase WS part
+    /*    useEffect(() => {
         const db = firebase.firestore();
         return db.collection("users").onSnapshot(snapshot => {
             const usersData = snapshot.docs.map(doc => ({
@@ -122,7 +109,7 @@ const Home = ({ currentUser, setModalContent, clearModalContent }) => {
             ];
             setDepartments(departments);
         });
-    }, []);
+    }, []);*/
 
     useEffect(() => {
         const pagedUsersArray = users.slice(
@@ -130,12 +117,12 @@ const Home = ({ currentUser, setModalContent, clearModalContent }) => {
             itemsPerPage * activePage
         );
 
-        if (!pagedUsersArray.length&&activePage>1) {
+        if (!pagedUsersArray.length && activePage > 1) {
             setActivePage(activePage - 1);
         } else {
             setUsersForCurrentPage(pagedUsersArray);
         }
-    }, [users, activePage]);
+    }, [users, activePage, itemsPerPage]);
 
     return currentUser ? (
         <Container className={"my-3"}>
@@ -186,7 +173,19 @@ const Home = ({ currentUser, setModalContent, clearModalContent }) => {
     ) : null;
 };
 
-const mapStateToProps = ({ auth }) => ({ currentUser: auth.currentUser });
-const mapDispatchToProps = {setModalContent, clearModalContent}
+const mapStateToProps = ({ auth, data, departments }) => ({
+    currentUser: auth.currentUser,
+    users: data.users,
+    departments: departments.departments
+});
+const mapDispatchToProps = {
+    setModalContent,
+    clearModalContent,
+    getUsersData,
+    deleteUser,
+    createUser,
+    updateUserData: updateUser,
+    findUsers
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

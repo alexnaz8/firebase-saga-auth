@@ -1,13 +1,7 @@
 import React from "react";
 import Modal from "react-bootstrap/Modal";
-import {connect} from "react-redux";
-const ModalComponent = ({
-    title,
-    showModal,
-    closeModal,
-    bodyContent
-}) => {
-    debugger
+import { connect } from "react-redux";
+const ModalComponent = ({ title, showModal, closeModal, bodyContent }) => {
     if (!showModal) return null;
     const hasForm = React.isValidElement(bodyContent);
     return (
@@ -39,9 +33,9 @@ const ModalComponent = ({
     );
 };
 
-const mapStateToProps= ({modal})=>{
-    debugger
-    return {title:modal.title,bodyContent:modal.content}
-}
+const mapStateToProps = ({ modal }) => ({
+    title: modal.title,
+    bodyContent: modal.content
+});
 
-export default  connect(mapStateToProps)(ModalComponent)
+export default connect(mapStateToProps)(ModalComponent);
