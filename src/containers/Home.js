@@ -33,7 +33,7 @@ const Home = ({
     findUsers
 }) => {
     const [modalIsShown, setModalShow] = useState(false);
-    const [itemsPerPage, setPerPageValue] = useState(4);
+    const itemsPerPage = 4;
     const [activePage, setActivePage] = useState(1);
     const [usersForCurrentPage, setUsersForCurrentPage] = useState([]);
     const showModal = () => {

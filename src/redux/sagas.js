@@ -36,7 +36,7 @@ function deleteUser(id) {
 
 function findFireBaseUsers(name) {
     const db = firebase.firestore();
-    return !!name
+    return name
         ? db
               .collection("users")
               .where("empName", "==", name)
