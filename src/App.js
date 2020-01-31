@@ -20,7 +20,7 @@ function App({ currentUser, setCurrentUser, clearCurrentUser }) {
     }, [currentUser, setCurrentUser, clearCurrentUser]);
     return (
         <ErrorBoundary>
-            <Router>
+            <Router basename='/firebase-saga-auth'>
                 <PrivateRoute exact path="/" component={Home} />
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/signup" component={SignUp} />
